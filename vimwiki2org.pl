@@ -95,8 +95,8 @@ my $plain_regexp = '^(\s*)(.*)$';
 
 # source(preformat) block in vimwiki
 # such as '{{{', '{{{sh', '}}}'
-my $src_block_begin_with_type_regexp = '^\s*{{{\s*\S+.*$';
-my $src_block_begin_no_type_regexp = '^\s*{{{\s*$';
+my $src_block_begin_with_type_regexp = '^\s*\{\{\{\s*\S+.*$';
+my $src_block_begin_no_type_regexp = '^\s*\{\{\{\s*$';
 my $src_block_end_regexp = '^\s*}}}\s*$';
 
 # other
@@ -388,9 +388,9 @@ sub open_and_dispatch {
                 if (/$src_block_begin_with_type_regexp/) {
                     # source code with type
                     if (/class=/) {
-                        s/{{{.*:\s*(\S+)\s*"\s*$/#+begin_src $1/;
+                        s/\{\{\{.*:\s*(\S+)\s*"\s*$/#+begin_src $1/;
                     } else {
-                        s/{{{\s*(\S+)\s*$/#+begin_src $1/;
+                        s/\{\{\{\s*(\S+)\s*$/#+begin_src $1/;
                     }
 
                     $last_begin_as_src = 1;
@@ -398,10 +398,10 @@ sub open_and_dispatch {
                 } elsif (/$src_block_begin_no_type_regexp/) {
                     # source code without type
                     if (defined $untyped_preformat_block_convert_type) {
-                        s/{{{\s*/#+begin_src $untyped_preformat_block_convert_type/;
+                        s/\{\{\{\s*/#+begin_src $untyped_preformat_block_convert_type/;
                         $last_begin_as_src = 1;
                     } else {
-                        s/{{{\s*/#+begin_example/;
+                        s/\{\{\{\s*/#+begin_example/;
                         $last_begin_as_src = 0;
                     }
                     $under_src_block = 1;
